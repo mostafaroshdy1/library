@@ -8,7 +8,9 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { UserModels } from 'src/models/user.models';
 import { UserService } from 'src/services/user.service';
 
@@ -20,6 +22,7 @@ export class UserController {
     return this.userService.create(data);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Put(':id')
   update(
     @Body() data: UserModels.UpdateReq,
@@ -28,11 +31,13 @@ export class UserController {
     return this.userService.update(id, data);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number): Promise<{ result: boolean }> {
     return this.userService.delete(id);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get()
   getAll(@Query() data: UserModels.GetAllReq): Promise<UserModels.Res[]> {
     return this.userService.getAll(data);

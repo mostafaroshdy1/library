@@ -37,6 +37,7 @@ export class AuthService {
 
   async refresh() {
     const currentUser = this.localStorageService.getCurrentUser();
+
     const user = await this.usersRepository.getById(currentUser.id);
 
     if (!user) throw new BadRequestException(ErrorMessages.user.notFound);
