@@ -11,5 +11,10 @@ export namespace ErrorMessages {
     notFound = 'User not found',
     invalidCredentials = 'Invalid email or password',
     emailExists = 'Email already exists',
+    userNotFound = 'User not found',
+  }
+
+  export enum common {
+    emptyUpdateData = 'Update data cannot be empty',
   }
 }
