@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ErrorMessages } from 'src/common/enums/error-messages.enum';
+import { ResponseModels } from 'src/common/models/response.model';
 import { HashService } from 'src/common/services/hash.service';
 import { UserModels } from 'src/models/user.models';
 import { UserRepository } from 'src/repository/users.repository';
@@ -38,7 +39,7 @@ export class UserService {
     return this.userRepository.update(id, data);
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<ResponseModels.ack> {
     const deleteResult = await this.userRepository.deleteById(id);
     if (deleteResult.rowCount === 0)
       throw new NotFoundException(ErrorMessages.user.userNotFound);

@@ -1,4 +1,4 @@
-import { date, integer, pgTable, serial, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, serial, timestamp } from 'drizzle-orm/pg-core';
 import { users } from './user.schema';
 import { books } from './books.schema';
 

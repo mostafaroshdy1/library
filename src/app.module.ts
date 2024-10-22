@@ -7,6 +7,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CurrentUserInterceptor } from './common/interceptors/currentUser.interceptor';
 import { CommonModule } from './modules/common.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { BookModule } from './modules/book.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     UserModule,
     AuthModule,
     CommonModule,
+    BookModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

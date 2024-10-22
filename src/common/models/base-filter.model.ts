@@ -16,12 +16,4 @@ export class BaseFilter {
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
   offset: number;
-
-  @IsOptional()
-  @IsString()
-  orderBy?: string = 'id';
-
-  @IsOptional()
-  @IsString()
-  order: 'ASC' | 'DESC' = 'ASC';
 }

@@ -2,8 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { and, eq, like, sql } from 'drizzle-orm';
 import { dateHelper } from 'src/common/helpers/date.helper';
 import { Book, Repository } from 'src/db/drizzle';
+import { authors } from 'src/db/schema/author.schema';
 import { books } from 'src/db/schema/books.schema';
 import { borrowingRecords } from 'src/db/schema/borrowingRecords.schema';
+import { shelfLocations } from 'src/db/schema/shelfLocations.schema';
+import { BookDtos } from 'src/dtos/book.dtos';
+import { BookModels } from 'src/models/book.models';
 import { DRIZZLE } from 'src/modules/drizzle.module';
 
 @Injectable()
@@ -38,38 +42,16 @@ export class BookRepository {
       .execute();
   }
 
-  getByAuther(author: string) {
-    return this.repository
-      .select()
-      .from(books)
-      .where(like(books.author, author))
-      .execute();
+  create(data: BookDtos.model) {
+    return this.repository.insert(books).values(data).returning().execute();
   }
 
-  create(data: {
-    title: string;
-    ISBN: string;
-    author: string;
-    qty: number;
-    shelfLocation: string;
-  }) {
-    return this.repository.insert(books).values(data).execute();
-  }
-
-  update(
-    id: number,
-    data: {
-      title: string;
-      ISBN: string;
-      author: string;
-      qty: number;
-      shelfLocation: string;
-    },
-  ) {
+  update(id: number, data: BookDtos.model) {
     return this.repository
       .update(books)
       .set(data)
       .where(eq(books.id, id))
+      .returning()
       .execute();
   }
 
@@ -77,8 +59,30 @@ export class BookRepository {
     return this.repository.delete(books).where(eq(books.id, id)).execute();
   }
 
-  getAll() {
-    return this.repository.select().from(books).execute();
+  getAll(data: BookModels.GetAllReq): Promise<BookModels.GetAllRes[]> {
+    const { limit, offset, ISBN, title, id, author } = data;
+
+    const query = this.repository
+      .select({
+        id: books.id,
+        title: books.title,
+        ISBN: books.ISBN,
+        shelfLocations: shelfLocations.name,
+        author: authors.name,
+        qty: books.qty,
+      })
+      .from(books)
+      .innerJoin(authors, eq(books.authorId, authors.id))
+      .innerJoin(shelfLocations, eq(books.shelfLocationId, shelfLocations.id))
+      .limit(limit)
+      .offset(offset);
+
+    if (ISBN) query.where(eq(books.ISBN, ISBN));
+    if (title) query.where(eq(books.title, title));
+    if (id) query.where(eq(books.id, id));
+    if (author) query.where(eq(authors.name, author));
+
+    return query.execute();
   }
 
   async returnBook(bookId: number, userId: number) {

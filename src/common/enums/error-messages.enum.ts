@@ -17,4 +17,9 @@ export namespace ErrorMessages {
   export enum common {
     emptyUpdateData = 'Update data cannot be empty',
   }
+
+  export enum book {
+    ISBNExists = 'Book with this ISBN already exists',
+    notFound = 'Book not found',
+  }
 }

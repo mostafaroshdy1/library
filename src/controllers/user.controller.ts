@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { ResponseModels } from 'src/common/models/response.model';
 import { UserModels } from 'src/models/user.models';
 import { UserService } from 'src/services/user.service';
 
@@ -33,7 +34,7 @@ export class UserController {
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number): Promise<{ result: boolean }> {
+  delete(@Param('id', ParseIntPipe) id: number): Promise<ResponseModels.ack> {
     return this.userService.delete(id);
   }
 

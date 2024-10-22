@@ -1,9 +1,40 @@
 {
-  "id": "655f97aa-cdb7-4fe1-a216-4327c9024605",
+  "id": "41c07246-84ca-4450-a566-be100b7eb9cc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.authors": {
+      "name": "authors",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "authors_name_unique": {
+          "name": "authors_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
     "public.books": {
       "name": "books",
       "schema": "",
@@ -26,9 +57,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "author": {
-          "name": "author",
-          "type": "varchar(255)",
+        "authorId": {
+          "name": "authorId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shelfLocationId": {
+          "name": "shelfLocationId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -37,16 +74,37 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "shelfLocation": {
-          "name": "shelfLocation",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "books_authorId_authors_id_fk": {
+          "name": "books_authorId_authors_id_fk",
+          "tableFrom": "books",
+          "tableTo": "authors",
+          "columnsFrom": [
+            "authorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "books_shelfLocationId_shelfLocations_id_fk": {
+          "name": "books_shelfLocationId_shelfLocations_id_fk",
+          "tableFrom": "books",
+          "tableTo": "shelfLocations",
+          "columnsFrom": [
+            "shelfLocationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "books_ISBN_unique": {
@@ -137,6 +195,37 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.shelfLocations": {
+      "name": "shelfLocations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "shelfLocations_name_unique": {
+          "name": "shelfLocations_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.users": {
