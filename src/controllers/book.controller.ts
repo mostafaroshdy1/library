@@ -42,4 +42,9 @@ export class BookController {
   getAll(@Query() data: BookModels.GetAllReq): Promise<BookModels.GetAllRes[]> {
     return this.bookService.getAll(data);
   }
+
+  @Post('borrow')
+  borrow(@Body() data: BookModels.BorrowReq): Promise<ResponseModels.ack> {
+    return this.bookService.borrowBook(data);
+  }
 }

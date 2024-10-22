@@ -105,4 +105,42 @@ export class BookRepository {
       ]);
     });
   }
+
+  async borrowBook(bookId: number, userId: number, dueDate: Date) {
+    await this.repository.transaction(async (trx) => {
+      await Promise.all([
+        trx
+          .update(books)
+          .set({ qty: sql`${books.qty} - 1` })
+          .where(eq(books.id, bookId)),
+
+        trx
+          .insert(borrowingRecords)
+          .values({
+            bookId,
+            userId,
+            dueDate,
+            borrowedAt: dateHelper.date(),
+          })
+          .execute(),
+      ]);
+    });
+  }
+
+  getBorrowedBooks(userId: number) {
+    return this.repository
+      .select({
+        id: books.id,
+        title: books.title,
+        ISBN: books.ISBN,
+        author: authors.name,
+        shelfLocation: shelfLocations.name,
+      })
+      .from(borrowingRecords)
+      .innerJoin(books, eq(borrowingRecords.bookId, books.id))
+      .innerJoin(authors, eq(books.authorId, authors.id))
+      .innerJoin(shelfLocations, eq(books.shelfLocationId, shelfLocations.id))
+      .where(eq(borrowingRecords.userId, userId))
+      .execute();
+  }
 }

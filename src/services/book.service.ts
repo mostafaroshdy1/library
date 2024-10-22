@@ -5,12 +5,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ErrorMessages } from 'src/common/enums/error-messages.enum';
+import { dateHelper } from 'src/common/helpers/date.helper';
 import { ResponseModels } from 'src/common/models/response.model';
 import { BookDtos } from 'src/dtos/book.dtos';
 import { BookModels } from 'src/models/book.models';
 import { AuthorRepository } from 'src/repository/author.repository';
 import { BookRepository } from 'src/repository/books.repository';
 import { ShelfLocationRepository } from 'src/repository/shelfLocation.repository';
+import { UserRepository } from 'src/repository/users.repository';
 
 @Injectable()
 export class BookService {
@@ -18,6 +20,7 @@ export class BookService {
     private readonly bookRepository: BookRepository,
     private readonly authorRepository: AuthorRepository,
     private readonly shelfLocationRepository: ShelfLocationRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async create(data: BookModels.CreateReq) {
@@ -110,5 +113,30 @@ export class BookService {
 
   getAll(data: BookModels.GetAllReq): Promise<BookModels.GetAllRes[]> {
     return this.bookRepository.getAll(data);
+  }
+
+  async borrowBook(data: BookModels.BorrowReq): Promise<ResponseModels.ack> {
+    if (dateHelper.isPast(data.dueDate))
+      throw new BadRequestException(ErrorMessages.book.invalidDueDate);
+
+    const foundBook = await this.bookRepository.getById(data.bookId);
+    if (!foundBook) throw new NotFoundException(ErrorMessages.book.notFound);
+
+    if (foundBook.qty === 0)
+      throw new BadRequestException(ErrorMessages.book.outOfStock);
+
+    const foundUser = await this.userRepository.getById(data.userId);
+    if (!foundUser) throw new NotFoundException(ErrorMessages.user.notFound);
+
+    try {
+      await this.bookRepository.borrowBook(
+        data.bookId,
+        data.userId,
+        data.dueDate,
+      );
+      return { result: true };
+    } catch (error) {
+      throw new BadRequestException(ErrorMessages.book.borrowFailed);
+    }
   }
 }

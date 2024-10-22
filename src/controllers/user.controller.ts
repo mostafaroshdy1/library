@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { ResponseModels } from 'src/common/models/response.model';
+import { BookModels } from 'src/models/book.models';
 import { UserModels } from 'src/models/user.models';
 import { UserService } from 'src/services/user.service';
 
@@ -42,5 +43,10 @@ export class UserController {
   @Get()
   getAll(@Query() data: UserModels.GetAllReq): Promise<UserModels.Res[]> {
     return this.userService.getAll(data);
+  }
+
+  @Get(':id/borrowed-books')
+  getBorrowedBooks(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getBorrowedBooks(id);
   }
 }

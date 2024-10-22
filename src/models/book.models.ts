@@ -1,4 +1,6 @@
+import { Transform } from 'class-transformer';
 import {
+  IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -6,6 +8,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { dateHelper } from 'src/common/helpers/date.helper';
 import { BaseFilter } from 'src/common/models/base-filter.model';
 
 export namespace BookModels {
@@ -99,5 +102,20 @@ export namespace BookModels {
     shelfLocations: string;
     author: string;
     qty: number;
+  }
+
+  export class BorrowReq {
+    @IsNotEmpty()
+    @IsNumber()
+    bookId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    userId: number;
+
+    @IsNotEmpty()
+    @IsDate()
+    @Transform(({ value }) => dateHelper.date(value))
+    dueDate: Date;
   }
 }

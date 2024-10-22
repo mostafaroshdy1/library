@@ -21,5 +21,8 @@ export namespace ErrorMessages {
   export enum book {
     ISBNExists = 'Book with this ISBN already exists',
     notFound = 'Book not found',
+    outOfStock = 'Book is out of stock',
+    invalidDueDate = 'Due date should be in the future',
+    borrowFailed = 'Failed to borrow book',
   }
 }

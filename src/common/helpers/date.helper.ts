@@ -32,4 +32,8 @@ export const dateHelper = {
       endDate2: dayjs(endDate).toDate(),
     };
   },
+
+  isPast(date: Date): boolean {
+    return dayjs(date).isBefore(dayjs());
+  },
 };

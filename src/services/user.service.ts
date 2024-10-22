@@ -8,6 +8,7 @@ import { ErrorMessages } from 'src/common/enums/error-messages.enum';
 import { ResponseModels } from 'src/common/models/response.model';
 import { HashService } from 'src/common/services/hash.service';
 import { UserModels } from 'src/models/user.models';
+import { BookRepository } from 'src/repository/books.repository';
 import { UserRepository } from 'src/repository/users.repository';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly hashService: HashService,
+    private readonly bookRepository: BookRepository,
   ) {}
 
   async create(data: UserModels.CreateReq) {
@@ -46,7 +48,11 @@ export class UserService {
     return { result: true };
   }
 
-  async getAll(data: UserModels.GetAllReq) {
+  getAll(data: UserModels.GetAllReq) {
     return this.userRepository.getAll(data);
+  }
+
+  getBorrowedBooks(id: number) {
+    return this.bookRepository.getBorrowedBooks(id);
   }
 }
