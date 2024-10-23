@@ -29,7 +29,11 @@
    ```
    pnpm drizzle-kit migrate
    ```
-6. **Start the application:**
+6. **Build the application:**
+   ```
+   pnpm run build
+   ```
+7. **Start the application:**
    ```
    pnpm run start:prod
    ```
