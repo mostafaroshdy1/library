@@ -13,22 +13,22 @@
    ```
    cd library
    ```
-   3. **Start Postgresql database:**
+3. **Start Postgresql database:**
    ```
    sudo docker-compose up
    ```
-3. **Install dependencies using pnpm:**
+4. **Install dependencies using pnpm:**
    ```
    pnpm install
    ```
-4. **Run database migrations:**
+5. **Run database migrations:**
    ```
    pnpm drizzle-kit migrate
    ```
-5. **Start the application:**
+6. **Start the application:**
    ```
    pnpm run start:prod
    ```
-5. **Finally**
+7. **Finally**
    - start testing the app through the provided postman collection
 
