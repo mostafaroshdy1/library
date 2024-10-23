@@ -7,7 +7,7 @@ export default defineConfig({
   dbCredentials: {
     url:
       process.env.DATABASE_URL ||
-      'postgresql://postgres:postgres@localhost:5432/library?schema=public',
+      'postgresql://postgres:postgres@localhost:5432/postgres?schema=public',
     ssl: true,
   },
 });
