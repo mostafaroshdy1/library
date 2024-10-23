@@ -1,6 +1,7 @@
 ## Library database erd
 
-![Pasted image (4)](https://github.com/user-attachments/assets/11b4ba5d-719a-4520-9254-33fc0926576c)
+![Pasted image (3)](https://github.com/user-attachments/assets/275ba8d6-933e-4569-896a-7318385b1578)
+
 
 **Back-End Installation:**
 
