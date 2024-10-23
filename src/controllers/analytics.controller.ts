@@ -23,4 +23,30 @@ export class AnalyticsController {
 
     return res.send(csvBuffer);
   }
+
+  @Get('overdue/past-month')
+  async getOverduePastMonthAnalytics(@Res() res: FastifyReply) {
+    const csvBuffer =
+      await this.analyticsService.getOverduePastMonthAnalytics();
+    res.header('Content-Type', 'text/csv');
+    res.header(
+      'Content-Disposition',
+      'attachment; filename="overdue_past_month.csv"',
+    );
+
+    return res.send(csvBuffer);
+  }
+
+  @Get('records/past-month')
+  async getBorrowingRecordsPastMonth(@Res() res: FastifyReply) {
+    const csvBuffer =
+      await this.analyticsService.getPastMonthBorrowingRecords();
+    res.header('Content-Type', 'text/csv');
+    res.header(
+      'Content-Disposition',
+      'attachment; filename="borrowing_history.csv"',
+    );
+
+    return res.send(csvBuffer);
+  }
 }

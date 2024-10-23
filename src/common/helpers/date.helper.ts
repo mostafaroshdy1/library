@@ -13,27 +13,19 @@ export const dateHelper = {
     return dayjs(date).add(n, unite).toDate();
   },
 
-  timeDifferenceInHours(startDate: Date, endDate: Date): number {
-    return dayjs(endDate).diff(dayjs(startDate), 'hour');
-  },
-
-  divideDateRangeInHalf(
-    startDate: Date,
-    endDate: Date,
-  ): { startDate1: Date; endDate1: Date; startDate2: Date; endDate2: Date } {
-    const diffInMs = dayjs(endDate).diff(dayjs(startDate), 'millisecond');
-    const halfDiffInMs = diffInMs / 2;
-    const endDate1 = dayjs(startDate).add(halfDiffInMs, 'millisecond').toDate();
-    const startDate2 = endDate1;
-    return {
-      startDate1: dayjs(startDate).toDate(),
-      endDate1: endDate1,
-      startDate2: startDate2,
-      endDate2: dayjs(endDate).toDate(),
-    };
-  },
-
   isPast(date: Date): boolean {
     return dayjs(date).isBefore(dayjs());
+  },
+
+  getDateInPast(n: number, unite: dayjs.ManipulateType): Date {
+    return dayjs().subtract(n, unite).toDate();
+  },
+
+  getEndOfDate(date: Date, unit: dayjs.UnitType): Date {
+    return dayjs(date).endOf(unit).toDate();
+  },
+
+  getfirstOfDate(date: Date, unit: dayjs.UnitType): Date {
+    return dayjs(date).startOf(unit).toDate();
   },
 };

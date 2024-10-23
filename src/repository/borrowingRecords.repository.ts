@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, eq, is, isNotNull, isNull, sql } from 'drizzle-orm';
+import { and, between, eq, isNotNull, isNull, lte, or, sql } from 'drizzle-orm';
+import { dateHelper } from 'src/common/helpers/date.helper';
 import { BorrowingRecord, Repository } from 'src/db/drizzle';
 import { authors } from 'src/db/schema/author.schema';
 import { books } from 'src/db/schema/books.schema';
@@ -93,6 +94,48 @@ export class BorrowingRecordsRepository {
       .innerJoin(books, eq(borrowingRecords.bookId, books.id))
       .innerJoin(authors, eq(books.authorId, authors.id))
       .innerJoin(shelfLocations, eq(books.shelfLocationId, shelfLocations.id))
+      .where(between(borrowingRecords.borrowedAt, data.fromDate, data.toDate))
+      .execute();
+  }
+
+  getOverdueBorrows(data: AnalyticsModels.BorrowingAnalyticsReq) {
+    return this.repository
+      .select({
+        user: {
+          id: users.id,
+          name: users.username,
+          email: users.email,
+          registeredAt: users.registeredAt,
+        },
+        books: {
+          id: books.id,
+          title: books.title,
+          ISBN: books.ISBN,
+          author: authors.name,
+          shelfLocation: shelfLocations.name,
+          borrowedAt: borrowingRecords.borrowedAt,
+        },
+      })
+      .from(borrowingRecords)
+      .innerJoin(users, eq(borrowingRecords.userId, users.id))
+      .innerJoin(books, eq(borrowingRecords.bookId, books.id))
+      .innerJoin(authors, eq(books.authorId, authors.id))
+      .innerJoin(shelfLocations, eq(books.shelfLocationId, shelfLocations.id))
+      .where(
+        and(
+          between(borrowingRecords.borrowedAt, data.fromDate, data.toDate),
+          or(
+            and(
+              isNull(borrowingRecords.returnedAt),
+              lte(borrowingRecords.dueDate, dateHelper.date()),
+            ),
+            and(
+              isNotNull(borrowingRecords.returnedAt),
+              lte(borrowingRecords.dueDate, borrowingRecords.returnedAt),
+            ),
+          ),
+        ),
+      )
       .execute();
   }
 }
