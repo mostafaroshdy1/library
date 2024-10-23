@@ -35,11 +35,14 @@
     "class-validator": "^0.14.1",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.35.3",
+    "fast-csv": "^5.0.2",
+    "fastify": "^5.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "stream-buffers": "^3.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.5",

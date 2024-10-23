@@ -8,6 +8,7 @@ import { AuthModule } from 'src/modules/auth.module';
 import { BookModule } from 'src/modules/book.module';
 import { CommonModule } from 'src/modules/common.module';
 import { UserModule } from 'src/modules/user.module';
+import { AnalyticsModule } from './analytics.module';
 
 @Module({
   imports: [
@@ -16,17 +17,18 @@ import { UserModule } from 'src/modules/user.module';
       isGlobal: true,
       cache: true,
     }),
-
-    UserModule,
-    AuthModule,
-    CommonModule,
-    BookModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
         limit: 50,
       },
     ]),
+
+    UserModule,
+    AuthModule,
+    CommonModule,
+    BookModule,
+    AnalyticsModule,
   ],
 
   providers: [
