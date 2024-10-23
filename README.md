@@ -17,6 +17,10 @@
    ```
    sudo docker-compose up
    ```
+4. **Create env file:**
+   ```
+   cp .env.example .env
+   ```
 4. **Install dependencies using pnpm:**
    ```
    pnpm install
