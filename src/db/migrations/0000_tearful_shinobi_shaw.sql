@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS "authors" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "authors_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"name" varchar(255) NOT NULL,
 	CONSTRAINT "authors_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "books" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "books_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"title" varchar(255) NOT NULL,
 	"ISBN" varchar(255) NOT NULL,
 	"authorId" integer NOT NULL,
@@ -16,23 +16,22 @@ CREATE TABLE IF NOT EXISTS "books" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "borrowingRecords" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "borrowingRecords_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"userId" integer NOT NULL,
 	"bookId" integer NOT NULL,
 	"borrowedAt" timestamp DEFAULT now() NOT NULL,
 	"dueDate" timestamp NOT NULL,
-	"returnedAt" timestamp,
-	CONSTRAINT "borrowingRecords_userId_bookId_returnedAt_unique" UNIQUE NULLS NOT DISTINCT("userId","bookId","returnedAt")
+	"returnedAt" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shelfLocations" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "shelfLocations_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"name" varchar(255) NOT NULL,
 	CONSTRAINT "shelfLocations_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "users_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"username" varchar(255) NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,

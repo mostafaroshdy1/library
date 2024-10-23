@@ -1,6 +1,6 @@
 {
-  "id": "426119b2-c0db-4ad1-9f1e-37cfcb0d9805",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "a7f9fd2b-dcf3-48dd-80d5-a10c075f2aec",
+  "prevId": "426119b2-c0db-4ad1-9f1e-37cfcb0d9805",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -209,7 +209,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "borrowingRecords_bookId_books_id_fk": {

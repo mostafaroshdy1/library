@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, eq, like, sql } from 'drizzle-orm';
+import { and, eq, gte, isNull, like, lte, sql } from 'drizzle-orm';
+import { title } from 'process';
 import { dateHelper } from 'src/common/helpers/date.helper';
 import { Book, Repository } from 'src/db/drizzle';
 import { authors } from 'src/db/schema/author.schema';
@@ -141,7 +142,30 @@ export class BookRepository {
       .innerJoin(books, eq(borrowingRecords.bookId, books.id))
       .innerJoin(authors, eq(books.authorId, authors.id))
       .innerJoin(shelfLocations, eq(books.shelfLocationId, shelfLocations.id))
-      .where(eq(borrowingRecords.userId, userId))
+      .where(
+        and(
+          eq(borrowingRecords.userId, userId),
+          isNull(borrowingRecords.returnedAt),
+        ),
+      )
+
       .execute();
+  }
+
+  getOverdueBooks() {
+    return this.repository
+      .select({
+        id: books.id,
+        title: books.title,
+        ISBN: books.ISBN,
+      })
+      .from(books)
+      .innerJoin(borrowingRecords, eq(books.id, borrowingRecords.bookId))
+      .where(
+        and(
+          isNull(borrowingRecords.returnedAt),
+          lte(borrowingRecords.dueDate, dateHelper.date()),
+        ),
+      );
   }
 }

@@ -171,7 +171,12 @@ export class BookService {
       await this.bookRepository.returnBook(data);
       return { result: true };
     } catch (error) {
+      console.error(error);
       throw new BadRequestException(ErrorMessages.book.returnFailed);
     }
+  }
+
+  getOverdueBooks() {
+    return this.bookRepository.getOverdueBooks();
   }
 }

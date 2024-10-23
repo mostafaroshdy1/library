@@ -9,6 +9,7 @@ import { ResponseModels } from 'src/common/models/response.model';
 import { HashService } from 'src/common/services/hash.service';
 import { UserModels } from 'src/models/user.models';
 import { BookRepository } from 'src/repository/books.repository';
+import { BorrowingRecordsRepository } from 'src/repository/borrowingRecords.repository';
 import { UserRepository } from 'src/repository/users.repository';
 
 @Injectable()
@@ -42,6 +43,10 @@ export class UserService {
   }
 
   async delete(id: number): Promise<ResponseModels.ack> {
+    const borrowedBooks = await this.bookRepository.getBorrowedBooks(id);
+    if (borrowedBooks.length)
+      throw new BadRequestException(ErrorMessages.user.canotBeDeleted);
+
     const deleteResult = await this.userRepository.deleteById(id);
     if (deleteResult.rowCount === 0)
       throw new NotFoundException(ErrorMessages.user.userNotFound);
@@ -52,7 +57,10 @@ export class UserService {
     return this.userRepository.getAll(data);
   }
 
-  getBorrowedBooks(id: number) {
+  async getBorrowedBooks(id: number) {
+    const foundUser = await this.userRepository.getById(id);
+    if (!foundUser)
+      throw new NotFoundException(ErrorMessages.user.userNotFound);
     return this.bookRepository.getBorrowedBooks(id);
   }
 }

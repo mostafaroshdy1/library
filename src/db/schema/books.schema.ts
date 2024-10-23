@@ -1,12 +1,12 @@
 import { sql } from 'drizzle-orm';
-import { check, integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { check, integer, pgTable, varchar } from 'drizzle-orm/pg-core';
 import { authors } from './author.schema';
 import { shelfLocations } from './shelfLocations.schema';
 
 export const books = pgTable(
   'books',
   {
-    id: serial().primaryKey().notNull(),
+    id: integer().primaryKey().generatedAlwaysAsIdentity().notNull(),
     title: varchar({ length: 255 }).notNull(),
     ISBN: varchar({ length: 255 }).unique().notNull(),
     authorId: integer()

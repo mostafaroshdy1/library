@@ -52,4 +52,9 @@ export class BookController {
   return(@Body() data: BookModels.ReturnReq): Promise<ResponseModels.ack> {
     return this.bookService.returnBook(data);
   }
+
+  @Get('overdue')
+  getOverdueBooks() {
+    return this.bookService.getOverdueBooks();
+  }
 }

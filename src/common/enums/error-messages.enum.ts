@@ -12,6 +12,7 @@ export namespace ErrorMessages {
     invalidCredentials = 'Invalid email or password',
     emailExists = 'Email already exists',
     userNotFound = 'User not found',
+    canotBeDeleted = 'A user cannot be deleted because they owe books to the library.',
   }
 
   export enum common {
