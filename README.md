@@ -37,6 +37,10 @@
    ```
    pnpm run start:prod
    ```
-7. **Finally**
+8. **To view database:**
+   ```
+   pnpm drizzle-kit studio
+   ```
+9. **Finally**
    - start testing the app through the provided postman collection
 
