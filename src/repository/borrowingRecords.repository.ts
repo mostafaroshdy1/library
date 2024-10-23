@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { and, eq, is, isNotNull, isNull } from 'drizzle-orm';
 import { BorrowingRecord, Repository } from 'src/db/drizzle';
 import { borrowingRecords } from 'src/db/schema/borrowingRecords.schema';
+import { BookModels } from 'src/models/book.models';
 import { DRIZZLE } from 'src/modules/drizzle.module';
 
 @Injectable()
@@ -24,15 +25,37 @@ export class BorrowingRecordsRepository {
     return this.repository.select().from(borrowingRecords).execute();
   }
 
-  borrowBook(data: { userId: number; bookId: number; dueDate: Date }) {
-    return this.repository.insert(borrowingRecords).values(data).execute();
+  async getReturnedRecord(data: BookModels.BorrowReq) {
+    const { bookId, userId } = data;
+    const record = await this.repository
+      .select()
+      .from(borrowingRecords)
+      .where(
+        and(
+          eq(borrowingRecords.bookId, bookId),
+          eq(borrowingRecords.userId, userId),
+          isNull(borrowingRecords.returnedAt),
+        ),
+      )
+      .execute();
+
+    return record[0];
   }
 
-  // markAsReturned(id: number) {
-  //   return this.repository
-  //     .update(borrowingRecords)
-  //     .set({ returnedAt: dateHelper.date() })
-  //     .where(eq(borrowingRecords.id, id))
-  //     .execute();
-  // }
+  async getUnReturnedRecord(data: BookModels.ReturnReq) {
+    const { bookId, userId } = data;
+    const record = await this.repository
+      .select()
+      .from(borrowingRecords)
+      .where(
+        and(
+          eq(borrowingRecords.bookId, bookId),
+          eq(borrowingRecords.userId, userId),
+          isNull(borrowingRecords.returnedAt),
+        ),
+      )
+      .execute();
+
+    return record[0];
+  }
 }

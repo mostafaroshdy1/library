@@ -85,7 +85,8 @@ export class BookRepository {
     return query.execute();
   }
 
-  async returnBook(bookId: number, userId: number) {
+  async returnBook(data: BookModels.ReturnReq) {
+    const { bookId, userId } = data;
     await this.repository.transaction(async (trx) => {
       await Promise.all([
         trx

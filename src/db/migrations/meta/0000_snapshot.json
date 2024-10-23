@@ -1,5 +1,5 @@
 {
-  "id": "41c07246-84ca-4450-a566-be100b7eb9cc",
+  "id": "3165805d-20ed-4af3-b944-5f49d5e76334",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -194,7 +194,17 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "borrowingRecords_userId_bookId_returnedAt_unique": {
+          "name": "borrowingRecords_userId_bookId_returnedAt_unique",
+          "nullsNotDistinct": true,
+          "columns": [
+            "userId",
+            "bookId",
+            "returnedAt"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.shelfLocations": {

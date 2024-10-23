@@ -47,4 +47,9 @@ export class BookController {
   borrow(@Body() data: BookModels.BorrowReq): Promise<ResponseModels.ack> {
     return this.bookService.borrowBook(data);
   }
+
+  @Post('return')
+  return(@Body() data: BookModels.ReturnReq): Promise<ResponseModels.ack> {
+    return this.bookService.returnBook(data);
+  }
 }

@@ -24,5 +24,8 @@ export namespace ErrorMessages {
     outOfStock = 'Book is out of stock',
     invalidDueDate = 'Due date should be in the future',
     borrowFailed = 'Failed to borrow book',
+    returnFailed = 'Failed to return book',
+    notBorrowed = 'Book is not borrowed',
+    alreadyBorrowed = 'Book is already borrowed',
   }
 }

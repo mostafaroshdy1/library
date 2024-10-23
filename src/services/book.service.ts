@@ -13,6 +13,8 @@ import { AuthorRepository } from 'src/repository/author.repository';
 import { BookRepository } from 'src/repository/books.repository';
 import { ShelfLocationRepository } from 'src/repository/shelfLocation.repository';
 import { UserRepository } from 'src/repository/users.repository';
+import { LocalStorageService } from './localStorage.service';
+import { BorrowingRecordsRepository } from 'src/repository/borrowingRecords.repository';
 
 @Injectable()
 export class BookService {
@@ -21,6 +23,8 @@ export class BookService {
     private readonly authorRepository: AuthorRepository,
     private readonly shelfLocationRepository: ShelfLocationRepository,
     private readonly userRepository: UserRepository,
+    private readonly localStorageService: LocalStorageService,
+    private readonly borrowingRecordsRepository: BorrowingRecordsRepository,
   ) {}
 
   async create(data: BookModels.CreateReq) {
@@ -116,11 +120,19 @@ export class BookService {
   }
 
   async borrowBook(data: BookModels.BorrowReq): Promise<ResponseModels.ack> {
+    if (!data.userId)
+      data.userId = this.localStorageService.getCurrentUser().id;
+
     if (dateHelper.isPast(data.dueDate))
       throw new BadRequestException(ErrorMessages.book.invalidDueDate);
 
     const foundBook = await this.bookRepository.getById(data.bookId);
     if (!foundBook) throw new NotFoundException(ErrorMessages.book.notFound);
+
+    const foundBorrowingRecord =
+      await this.borrowingRecordsRepository.getReturnedRecord(data);
+    if (foundBorrowingRecord)
+      throw new ConflictException(ErrorMessages.book.alreadyBorrowed);
 
     if (foundBook.qty === 0)
       throw new BadRequestException(ErrorMessages.book.outOfStock);
@@ -137,6 +149,29 @@ export class BookService {
       return { result: true };
     } catch (error) {
       throw new BadRequestException(ErrorMessages.book.borrowFailed);
+    }
+  }
+
+  async returnBook(data: BookModels.ReturnReq): Promise<ResponseModels.ack> {
+    if (!data.userId)
+      data.userId = this.localStorageService.getCurrentUser().id;
+
+    const foundUser = await this.userRepository.getById(data.userId);
+    if (!foundUser) throw new NotFoundException(ErrorMessages.user.notFound);
+
+    const foundBook = await this.bookRepository.getById(data.bookId);
+    if (!foundBook) throw new NotFoundException(ErrorMessages.book.notFound);
+
+    const foundBorrowingRecord =
+      await this.borrowingRecordsRepository.getUnReturnedRecord(data);
+    if (!foundBorrowingRecord)
+      throw new NotFoundException(ErrorMessages.book.notBorrowed);
+
+    try {
+      await this.bookRepository.returnBook(data);
+      return { result: true };
+    } catch (error) {
+      throw new BadRequestException(ErrorMessages.book.returnFailed);
     }
   }
 }

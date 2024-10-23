@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS "borrowingRecords" (
 	"bookId" integer NOT NULL,
 	"borrowedAt" timestamp DEFAULT now() NOT NULL,
 	"dueDate" timestamp NOT NULL,
-	"returnedAt" timestamp
+	"returnedAt" timestamp,
+	CONSTRAINT "borrowingRecords_userId_bookId_returnedAt_unique" UNIQUE NULLS NOT DISTINCT("userId","bookId","returnedAt")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shelfLocations" (

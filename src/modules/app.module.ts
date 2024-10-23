@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import configuration from './common/config/configuration';
-import { UserModule } from './modules/user.module';
-import { AuthModule } from './modules/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { CurrentUserInterceptor } from './common/interceptors/currentUser.interceptor';
-import { CommonModule } from './modules/common.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { BookModule } from './modules/book.module';
+import configuration from 'src/common/config/configuration';
+import { CurrentUserInterceptor } from 'src/common/interceptors/currentUser.interceptor';
+import { AuthModule } from 'src/modules/auth.module';
+import { BookModule } from 'src/modules/book.module';
+import { CommonModule } from 'src/modules/common.module';
+import { UserModule } from 'src/modules/user.module';
 
 @Module({
   imports: [

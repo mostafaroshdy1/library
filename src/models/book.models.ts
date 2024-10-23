@@ -109,7 +109,7 @@ export namespace BookModels {
     @IsNumber()
     bookId: number;
 
-    @IsNotEmpty()
+    @IsOptional() // if it was not givin the borrow will be registered to the current user
     @IsNumber()
     userId: number;
 
@@ -117,5 +117,15 @@ export namespace BookModels {
     @IsDate()
     @Transform(({ value }) => dateHelper.date(value))
     dueDate: Date;
+  }
+
+  export class ReturnReq {
+    @IsNotEmpty()
+    @IsNumber()
+    bookId: number;
+
+    @IsOptional() // if it was not givin the borrow will be registered to the current user
+    @IsNumber()
+    userId: number;
   }
 }
