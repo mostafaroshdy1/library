@@ -126,19 +126,19 @@ export class BookService {
     if (dateHelper.isPast(data.dueDate))
       throw new BadRequestException(ErrorMessages.book.invalidDueDate);
 
+    const foundUser = await this.userRepository.getById(data.userId);
+    if (!foundUser) throw new NotFoundException(ErrorMessages.user.notFound);
+
     const foundBook = await this.bookRepository.getById(data.bookId);
     if (!foundBook) throw new NotFoundException(ErrorMessages.book.notFound);
+
+    if (foundBook.qty === 0)
+      throw new BadRequestException(ErrorMessages.book.outOfStock);
 
     const foundBorrowingRecord =
       await this.borrowingRecordsRepository.getReturnedRecord(data);
     if (foundBorrowingRecord)
       throw new ConflictException(ErrorMessages.book.alreadyBorrowed);
-
-    if (foundBook.qty === 0)
-      throw new BadRequestException(ErrorMessages.book.outOfStock);
-
-    const foundUser = await this.userRepository.getById(data.userId);
-    if (!foundUser) throw new NotFoundException(ErrorMessages.user.notFound);
 
     try {
       await this.bookRepository.borrowBook(
